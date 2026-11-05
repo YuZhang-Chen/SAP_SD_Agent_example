@@ -39,3 +39,19 @@ print(orders)
 ```
 
 SAP 整合測試只讀取資料，不會建立訂單。教學系統若使用自簽憑證，可設定 `SAP_ODATA_VERIFY_TLS=false`；正式環境應使用有效憑證。
+
+## Phase 3：MCP Agent
+
+啟動 MCP stdio server：
+
+```powershell
+.venv\Scripts\python.exe -m sap_sd_agent.mcp_server
+```
+
+啟動命令列聊天：
+
+```powershell
+.venv\Scripts\python.exe -m sap_sd_agent.cli
+```
+
+Gemini 只能使用查單、明細與準備草稿三個工具。`commit_sales_order` 不會交給模型，只有使用者在 CLI 輸入 `yes` 後才會呼叫。

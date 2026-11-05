@@ -5,12 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "sap-sd-agent"
 version = "0.1.0"
-description = "Minimal SAP SD OData V2 and Gemini demo"
+description = "Minimal SAP SD OData V2, Gemini and MCP demo"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "google-genai>=1.50,<2",
     "httpx>=0.28,<0.29",
+    "mcp>=2,<3",
     "python-dotenv>=1.2,<2",
 ]
 
