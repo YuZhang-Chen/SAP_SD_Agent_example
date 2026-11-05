@@ -55,3 +55,19 @@ SAP 整合測試只讀取資料，不會建立訂單。教學系統若使用自�
 ```
 
 Gemini 只能使用查單、明細與準備草稿三個工具。`commit_sales_order` 不會交給模型，只有使用者在 CLI 輸入 `yes` 後才會呼叫。
+
+## Phase 4：Streamlit Demo
+
+啟動繁體中文網頁：
+
+```powershell
+.venv\Scripts\streamlit.exe run app.py
+```
+
+畫面可查詢訂單、查看 MCP 工具活動，以及準備建單草稿。只有按下「確認建立」後才會呼叫 `commit_sales_order`；按下「取消」不會寫入 SAP。
+
+Streamlit 畫面測試：
+
+```powershell
+.venv\Scripts\python.exe -m pytest tests\test_streamlit_app_mvp.py
+```
