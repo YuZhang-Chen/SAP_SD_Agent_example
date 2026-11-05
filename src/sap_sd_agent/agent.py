@@ -1,7 +1,11 @@
 from google.genai import types
 from mcp import Client
 
-from sap_sd_agent.gemini_api import load_gemini_config, make_gemini_client
+from sap_sd_agent.gemini_api import (
+    generate_with_retry,
+    load_gemini_config,
+    make_gemini_client,
+)
 from sap_sd_agent.mcp_server import mcp
 
 
@@ -67,7 +71,8 @@ async def ask_agent(prompt, gemini_config=None, gemini_client=None):
         )
 
         for _ in range(5):
-            response = gemini_client.models.generate_content(
+            response = generate_with_retry(
+                gemini_client,
                 model=gemini_config["model"],
                 contents=contents,
                 config=generate_config,

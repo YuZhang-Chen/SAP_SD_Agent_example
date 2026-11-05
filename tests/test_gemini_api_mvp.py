@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 
 import pytest
+from google.genai import errors
 
 from sap_sd_agent.gemini_api import ask_gemini, check_gemini
 
@@ -44,3 +45,28 @@ def test_check_gemini_uses_small_test_prompt():
     answer = ask_gemini(config, "請只回答 GEMINI_OK", client=fake_client)
 
     assert answer == "GEMINI_OK"
+
+def test_503_is_retried(monkeypatch):
+    fake_client = FakeGeminiClient()
+    calls = 0
+    waits = []
+
+    def generate_content(**kwargs):
+        nonlocal calls
+        calls += 1
+        if calls < 3:
+            raise errors.ServerError(503, {"error": {"message": "busy"}})
+        return SimpleNamespace(text="GEMINI_OK")
+
+    fake_client.models.generate_content = generate_content
+    monkeypatch.setattr("sap_sd_agent.gemini_api.time.sleep", waits.append)
+
+    answer = ask_gemini(
+        {"api_key": "demo", "model": "gemini-test", "timeout": 30},
+        "hello",
+        client=fake_client,
+    )
+
+    assert answer == "GEMINI_OK"
+    assert calls == 3
+    assert waits == [1, 2]
